@@ -8,22 +8,20 @@ const Book = ({ book, updateShelf }) => {
     updateShelf(true);
   };
 
-  //console.log(book);
-
-  return (
+  //returns a book component only if "book.imageLinks" exists
+  return book.imageLinks ? (
     <li key={book.id}>
       <div className="book">
         <div className="book-top">
-          {book.imageLinks ? (
-            <div
-              className="book-cover"
-              style={{
-                width: 128,
-                height: 193,
-                backgroundImage: `url(${book.imageLinks.thumbnail})`,
-              }}
-            />
-          ) : null}
+          <div
+            className="book-cover"
+            style={{
+              width: 128,
+              height: 193,
+              backgroundImage: `url(${book.imageLinks.thumbnail})`,
+            }}
+          />
+
           <div className="book-shelf-changer">
             <select
               value={book.shelf}
@@ -46,7 +44,7 @@ const Book = ({ book, updateShelf }) => {
         </div>
       </div>
     </li>
-  );
+  ) : null;
 };
 
 export default Book;

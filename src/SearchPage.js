@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Book from "./Book";
 
-function SearchPage(updateChangeShelf) {
+function SearchPage({ books, updateChangeShelf }) {
   const [query, updateQuery] = useState("");
   const [searchedBooks, updateSearchedBooks] = useState([]);
 
+  //makes a fetch request everytime the query parameter has changed
   useEffect(() => {
     let trimmedQuery = query.trim();
     if (trimmedQuery.length > 0) {
@@ -25,7 +26,6 @@ function SearchPage(updateChangeShelf) {
     }
   }, [query]);
 
-  console.log(query);
   console.log(searchedBooks);
 
   return (
@@ -46,13 +46,20 @@ function SearchPage(updateChangeShelf) {
       <div className="search-books-results">
         <ol className="books-grid">
           {searchedBooks
-            ? searchedBooks.map((book) => (
-                <Book
-                  book={book}
-                  key={book.id}
-                  updateShelf={updateChangeShelf}
-                />
-              ))
+            ? searchedBooks.map((book) => {
+                //checks to see if books from search request are available on the shelf
+                let filteredBook = books.filter(
+                  (bookfromShelf) => bookfromShelf.id === book.id
+                );
+
+                return (
+                  <Book
+                    book={filteredBook.length > 0 ? filteredBook[0] : book}
+                    key={filteredBook.length > 0 ? filteredBook[0].id : book.id}
+                    updateShelf={updateChangeShelf}
+                  />
+                );
+              })
             : null}
         </ol>
       </div>

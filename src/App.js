@@ -9,13 +9,12 @@ import SearchPage from "./SearchPage";
 
 function App() {
   const [books, updateBooks] = useState([]);
-  //const [searchedBooks, updateSearchedBooks] = useState([]);
   const [changeShelf, updateChangeShelf] = useState(false);
-  //const [query, updateQuery] = useState("");
 
+  //makes a fetch request to update the books array everytime the page is reloaded
+  //and the shelf of a book has been changed
   useEffect(() => {
     BooksAPI.getAll().then((books) => {
-      //console.log(books);
       updateBooks(books);
     });
     updateChangeShelf(false);
@@ -45,6 +44,7 @@ function App() {
                   <h2 className="bookshelf-title">Currently Reading</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
+                      {/* filters through the list of books for shelf "currentlyReading" */}
                       {books
                         ? books.map((book) =>
                             book.shelf === "currentlyReading" ? (
@@ -63,6 +63,7 @@ function App() {
                   <h2 className="bookshelf-title">Want to Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
+                      {/* filters through the list of books for shelf "wantToRead" */}
                       {books
                         ? books.map((book) =>
                             book.shelf === "wantToRead" ? (
@@ -81,6 +82,7 @@ function App() {
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
+                      {/* filters through the list of books for shelf "read" */}
                       {books
                         ? books.map((book) =>
                             book.shelf === "read" ? (
