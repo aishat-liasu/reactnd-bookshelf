@@ -1,13 +1,7 @@
 import React from "react";
-import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 
-const Book = ({ book, updateShelf }) => {
-  const updateBookShelf = (book, selectedShelf) => {
-    BooksAPI.update(book, selectedShelf);
-    updateShelf(true);
-  };
-
+const Book = ({ book, updateBookShelf }) => {
   //returns a book component only if "book.imageLinks" exists
   return book.imageLinks ? (
     <li key={book.id}>

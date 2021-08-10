@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Route, Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
-
-import { Route, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Book from "./Book";
 import SearchPage from "./SearchPage";
 
 function App() {
   const [books, updateBooks] = useState([]);
-  const [changeShelf, updateChangeShelf] = useState(false);
 
   //makes a fetch request to update the books array everytime the page is reloaded
-  //and the shelf of a book has been changed
   useEffect(() => {
     BooksAPI.getAll().then((books) => {
       updateBooks(books);
     });
-    updateChangeShelf(false);
-  }, [changeShelf]);
+  }, []);
+
+  const updateBookShelf = (book, selectedShelf) => {
+    BooksAPI.update(book, selectedShelf).then(() => {
+      book.shelf = selectedShelf;
+      // Filters out the book and appends it to the end of the list
+
+      let booksPlusChangedBook = books
+        .filter((b) => b.id !== book.id)
+        .concat([book]);
+      console.log(booksPlusChangedBook);
+      //updates the books array with the book that has a changed shelf
+      updateBooks([...booksPlusChangedBook]);
+    });
+  };
 
   return (
     <div className="app">
@@ -26,7 +35,7 @@ function App() {
         exact
         path="/search"
         render={() => (
-          <SearchPage books={books} updateChangeShelf={updateChangeShelf} />
+          <SearchPage books={books} updateBookShelf={updateBookShelf} />
         )}
       />
       <Route
@@ -51,7 +60,7 @@ function App() {
                               <Book
                                 book={book}
                                 key={book.id}
-                                updateShelf={updateChangeShelf}
+                                updateBookShelf={updateBookShelf}
                               />
                             ) : null
                           )
@@ -70,7 +79,7 @@ function App() {
                               <Book
                                 book={book}
                                 key={book.id}
-                                updateShelf={updateChangeShelf}
+                                updateBookShelf={updateBookShelf}
                               />
                             ) : null
                           )
@@ -89,7 +98,7 @@ function App() {
                               <Book
                                 book={book}
                                 key={book.id}
-                                updateShelf={updateChangeShelf}
+                                updateBookShelf={updateBookShelf}
                               />
                             ) : null
                           )

@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Book from "./Book";
 
-function SearchPage({ books, updateChangeShelf }) {
+function SearchPage({ books, updateBookShelf }) {
   const [query, updateQuery] = useState("");
   const [searchedBooks, updateSearchedBooks] = useState([]);
 
@@ -14,7 +13,6 @@ function SearchPage({ books, updateChangeShelf }) {
     let trimmedQuery = query.trim();
     if (trimmedQuery.length > 0) {
       BooksAPI.search(trimmedQuery).then((books) => {
-        console.log(books);
         if (books.error !== "empty query") {
           updateSearchedBooks(books);
         } else {
@@ -25,8 +23,6 @@ function SearchPage({ books, updateChangeShelf }) {
       updateSearchedBooks([]);
     }
   }, [query]);
-
-  console.log(searchedBooks);
 
   return (
     <div className="search-books">
@@ -48,15 +44,17 @@ function SearchPage({ books, updateChangeShelf }) {
           {searchedBooks
             ? searchedBooks.map((book) => {
                 //checks to see if books from search request are available on the shelf
-                let filteredBook = books.filter(
-                  (bookfromShelf) => bookfromShelf.id === book.id
-                );
+                let filteredBook = books
+                  ? books.filter(
+                      (bookfromShelf) => bookfromShelf.id === book.id
+                    )
+                  : [];
 
                 return (
                   <Book
                     book={filteredBook.length > 0 ? filteredBook[0] : book}
                     key={filteredBook.length > 0 ? filteredBook[0].id : book.id}
-                    updateShelf={updateChangeShelf}
+                    updateBookShelf={updateBookShelf}
                   />
                 );
               })
